@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Breadcrumb } from 'antd';
 import LeftNav from '../../components/left-nav/index';
+import HeaderMain from '../../components/header-main/index';
 const { Header, Content, Footer, Sider } = Layout;
 
 export default class Index extends Component {
@@ -20,13 +21,11 @@ export default class Index extends Component {
           <LeftNav collapsed={this.state.collapsed} />
         </Sider>
         <Layout>
-          <Header style={{ background: '#fff', padding: 0 }} />
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a cat.</div>
+          <Header style={{ background: '#fff', padding: 0, minHeight: 100}}>
+            <HeaderMain />
+          </Header>
+          <Content style={{ margin: '25px 16px' }}>
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎使用硅谷后台管理系统</div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
         </Layout>
