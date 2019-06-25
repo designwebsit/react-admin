@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { Layout, Breadcrumb } from 'antd';
+import { Route, Switch } from 'react-router-dom';
+import { Layout } from 'antd';
 import LeftNav from '../../components/left-nav/index';
 import HeaderMain from '../../components/header-main/index';
+import utils from '../../utils/storage-tools';
+import { reqValidateUserInfo } from '../../api';
+
+import Home from '../home';
+import Category from '../category';
+
 const { Header, Content, Footer, Sider } = Layout;
 
 export default class Index extends Component {
@@ -14,6 +21,18 @@ export default class Index extends Component {
     this.setState({ collapsed });
   };
 
+  componentWillMount = async () => {
+    const user = utils.getLoginItem();
+    if (user) {
+      // 验证用户id 是否正确
+      const result = await reqValidateUserInfo(user._id);
+      if (result.status === 0) {
+        return;
+      }
+    }
+    this.props.history.replace('/login');
+  }
+
   render() {
     return(
       <Layout style={{ minHeight: '100vh' }}>
@@ -25,7 +44,11 @@ export default class Index extends Component {
             <HeaderMain />
           </Header>
           <Content style={{ margin: '25px 16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎使用硅谷后台管理系统</div>
+            <Switch>
+              <Route path="/home" component={Home}/>
+              <Route path="/category" component={Category}/>
+            </Switch>
+
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
         </Layout>

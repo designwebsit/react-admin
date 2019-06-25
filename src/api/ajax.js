@@ -13,7 +13,7 @@ export default function (url, data, method) {
     .then((res) => {
     const { data } = res;
     if(!data.status) {
-      return true;
+      return data;
     } else {
       message.error(data.msg);
     }

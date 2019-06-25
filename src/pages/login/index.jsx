@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './index.less';
-import reqLogin from '../../api/index';
+import { reqLogin } from '../../api';
 import img from '../../assets/images/logo.png';
 import { Form, Icon, Input, Button } from 'antd';
+import  utils  from '../../utils/storage-tools';
 const Item = Form.Item;
 
 
@@ -30,11 +31,14 @@ const Item = Form.Item;
      this.props.form.validateFields(async (error, value) => {
        if (!error) {
          const { username, password } = value;
+         // 请求登录
          const result = await reqLogin(username, password);
-         if (result) {
-           this.props.history.replace('/')
+         // 登录成功
+         if (result.status === 0) {
+           utils.setLoginItem(result.data);
+           this.props.history.replace('/');
          } else {
-           // 重置密码
+           // 登录失败 重置密码
            this.props.form.resetFields(['password'])
          }
        } else {
@@ -48,12 +52,8 @@ const Item = Form.Item;
     return(
       <div id="login">
         <header className="login-header">
-          <h1 className="login-logo">
-            <a href="" >
-              <img src={img} alt="asd"/>
-            </a>
-          </h1>
-          <p className="logo-text">React项目: 后台管理系统</p>
+          <img src={img} alt="asd"/>
+          <h1>React项目: 后台管理系统</h1>
         </header>
         <div className="login-content">
           <h2>用户登录</h2>
@@ -79,8 +79,7 @@ const Item = Form.Item;
                   rules: [
                     { validator: this.checkPassword }
                   ],
-                })
-                (<Input
+                })(<Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
                   placeholder="Password"
