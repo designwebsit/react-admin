@@ -6,14 +6,14 @@ import utils from '../../utils/storage-tools';
 import { Modal } from 'antd';
 import dayjs from 'dayjs';
 import { reqWeather } from '../../api';
-
+import menuList from '../../config/menu-config';
 const { confirm } = Modal;
 
 
 class HeaderMain extends Component {
 
   state = {
-    date: Date.now(),
+    sysTime: Date.now(),
     weather: '晴',
     weatherImg: 'http://api.map.baidu.com/images/weather/day/qing.png'
   }
@@ -34,20 +34,22 @@ class HeaderMain extends Component {
     // 初始化用户名
     const { username } = utils.getLoginItem();
     this.username = username;
-
+    this.title = this.getTitle(this.props);
   }
   
-  componentWillReceiveProps () {
-    console.log(1);
+  componentWillReceiveProps (nextProps) {
+    this.title = this.getTitle(nextProps);
   }
 
   async componentDidMount () {
-    // setInterval(() => {
-    //   this.setState({
-    //     date: Date.now()
-    //   })
-    // },1000);
-    const result = await reqWeather();
+    this.timer = setInterval(() => {
+      this.setState({
+        sysTime: Date.now()
+      })
+    },1000);
+    const { cancle, promise } = reqWeather();
+    this.cancle = cancle;
+    const result = await promise;
     const { dayPictureUrl, weather } = result[0].weather_data[0];
     this.setState({
       weather,
@@ -55,18 +57,42 @@ class HeaderMain extends Component {
     })
   }
 
+  // 获取 title
+  getTitle = (props) => {
+    const { location } = props;
+    for (let i = 0; i < menuList.length; i++) {
+      if (menuList[i].children) {
+        for (let j = 0; j < menuList[i].children.length; j++) {
+          if (location.pathname === menuList[i].children[j].key) {
+            return menuList[i].children[j].title;
+          }
+        }
+      } else {
+        if (location.pathname === menuList[i].key ) {
+          return menuList[i].title;
+        }
+      }
+    }
+  }
+
+  componentWillUnmount () {
+    //  发送的 ajax 要在关闭前取消掉   一下 jsonp 的取消
+    this.cancle();
+    // 定时器也同上 得取消
+    clearInterval(this.timer)
+  }
+
   render() {
-    console.log(1);
-    const { date, weather, weatherImg } = this.state;
+    const { sysTime, weather, weatherImg } = this.state;
     return(<div>
         <div className="header-main-top">
           <span>欢迎, {this.username}</span>
           <MyButton onClick={this.logout}>退出</MyButton>
         </div>
         <div className="header-main-bottom">
-          <span className="header-main-left">用户管理</span>
+          <span className="header-main-left">{this.title}</span>
           <div className="header-main-right">
-            <span>{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span>
+            <span>{dayjs(sysTime).format('YYYY-MM-DD HH:mm:ss')}</span>
             <img src={weatherImg} alt=""/>
             <span>{weather}</span>
           </div>
