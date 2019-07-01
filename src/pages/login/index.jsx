@@ -6,7 +6,6 @@ import { Form, Icon, Input, Button } from 'antd';
 import  utils  from '../../utils/storage-tools';
 const Item = Form.Item;
 
-
  class Login extends Component {
 
    // 自定义校验密码

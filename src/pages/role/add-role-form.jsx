@@ -1,40 +1,36 @@
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
 
-const { Item } = Form;
+const Item = Form.Item;
 
-class UpdataCategoryName extends Component{
+class AddRoleForm extends Component {
 
   validator = (rule, value, callback) => {
     if (!value) return callback('请输入值');
-    if (value === this.props.categoryName) return callback('两次别一样')
     callback();
   }
   
-  render() {
-    const { categoryName } = this.props;
+  render () {
     const { getFieldDecorator } = this.props.form;
-    return(
+    
+    return (
       <Form>
-        <Item>
+        <Item label='角色名称' labelCol={{span: 6}}  wrapperCol={{span: 15}}>
           {
             getFieldDecorator(
-              'categoryName', {
-                initialValue: categoryName,
+              'name',{
                 rules: [{
                   validator: this.validator
                 }]
               }
             )(
-              <Input />
+              <Input placeholder='请输入角色名称'/>
             )
           }
-
         </Item>
-
       </Form>
-    );
+    )
   }
 }
 
-export default Form.create()(UpdataCategoryName);
+export default Form.create()(AddRoleForm)

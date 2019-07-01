@@ -16,6 +16,8 @@ class AddCategoryForm extends Component{
     const result = this.props.categories.find((item) => {
       if (value === item.name) {
         return true
+      } else {
+        return false
       }
     });
     if (result) return callback('已有分类');
@@ -23,7 +25,6 @@ class AddCategoryForm extends Component{
   }
   
   render() {
-    console.log(this.props);
     const { getFieldDecorator } = this.props.form;
     return(
       <Form>

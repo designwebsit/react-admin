@@ -59,16 +59,23 @@ class HeaderMain extends Component {
 
   // 获取 title
   getTitle = (props) => {
-    const { location } = props;
+    let { pathname } = props.location;
+
+    // 处理商品的路由显示 title 问题
+    const reg = /^\/product\//;
+    const result = reg.test(pathname);
+    if (result) {
+      pathname = pathname.slice(0,8);
+    }
     for (let i = 0; i < menuList.length; i++) {
       if (menuList[i].children) {
         for (let j = 0; j < menuList[i].children.length; j++) {
-          if (location.pathname === menuList[i].children[j].key) {
+          if (pathname === menuList[i].children[j].key) {
             return menuList[i].children[j].title;
           }
         }
       } else {
-        if (location.pathname === menuList[i].key ) {
+        if (pathname === menuList[i].key ) {
           return menuList[i].title;
         }
       }

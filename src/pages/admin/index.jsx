@@ -26,7 +26,6 @@ export default class Index extends Component {
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
 
